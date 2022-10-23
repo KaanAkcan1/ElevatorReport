@@ -1,0 +1,123 @@
+﻿
+<div id="vueAppMain">    
+    <div id="indexApp">
+        <div style="position: fixed; transform: rotate(270deg); transform-origin:top; right:0; top:50%; z-index:999; ">
+            <button type="button" class="btn btn-lg btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rightModal" style="">
+                Settings
+            </button>
+        </div>
+
+        <div id="vueApp">
+            <div class="modal right fade" id="rightModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" role="document">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <div class="dropdown mb-3" v-show="!showJsonText">
+                                    <select class="form-select" id="json-select" v-model="selectedItem" v-on:change="selectJson()" aria-label="Default select example">
+                                        <option selected>Choose Json</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="jsonFormBox" v-show="showJsonText">
+                                    <div class="jsonForm">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <div v-show="!showJsonText">
+                                <button type="button" class="btn btn-md  btn-outline-secondary mb-3" v-on:click="logout()" style="float:right;">Logout</button>
+                            </div>
+                            <div v-show="showJsonText" class="justify-content-between">
+                                <button type="button" class="btn btn-secondary" v-on:click="showJsonText=!showJsonText">Close Document</button>
+                                <button type="button" class="btn btn-primary" id="saveChangesBtn" :disabled="isButtonIsDisabled" v-on:click="saveChanges">Save changes</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="backdrop">
+                <div id="text">
+
+                </div>
+                <textarea id="text-area" spellcheck="false" v-on:input="currentData=$event.target.value"></textarea>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    var app = Vue.createApp({
+        data() {
+            return {
+                selectedItem: null,
+                showJsonText: false,
+                oldData: null,
+                currentData: null,
+                isButtonIsDisabled: true
+            };
+        },
+        methods: {            
+            logout() {
+                localStorage.removeItem("Token");
+
+                location.reload();
+            }
+        },
+        watch: {
+            oldData(newValue, oldValue) {
+                $('#saveChangesBtn').attr('disabled', 'disabled');
+            },
+            currentData(newValue, oldValue) {
+                console.log(newValue);
+                $('#saveChangesBtn').removeAttr('disabled');
+                if (newValue == this.oldData) {
+                    $('#saveChangesBtn').attr('disabled', 'disabled');
+                }
+            }
+
+        },
+
+
+        beforeMount() {
+        },
+
+        mounted() {
+            var a = localStorage.getItem("Token");
+
+            console.log(a);
+
+            if (a != null) {
+                $('#loginApp').remove();
+
+                this.getSelect();
+
+                textEditor.init();
+            }
+            else {
+                $('#indexApp').remove();
+            }
+        }
+
+
+    });
+
+    app.mount("#vueAppMain");
+
+</script>
+

@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "vue@3.2.41",
+      "destination": "wwwroot/lib/vue/"
+    }
+  ]
+}
